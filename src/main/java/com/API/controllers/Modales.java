@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class Modales
 {
-    @GetMapping("/hello")
+   @GetMapping("/hello")
     public ResponseEntity<String> Saludar()
     {
         return ResponseEntity.ok("Hola mundo! soy Gustavo");
     }
-    @PostMapping
+    @PostMapping("/goodbye")
     public ResponseEntity<String> Despedirse()
     {
         return ResponseEntity.ok("Hasta pronto");
@@ -24,6 +24,7 @@ public class Modales
     }
 
   //  @PutMapping("/modificar}" modifica un valor en la base de datos
+    
 }
 
 
