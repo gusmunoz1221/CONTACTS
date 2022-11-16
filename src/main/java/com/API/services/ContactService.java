@@ -61,7 +61,7 @@ public class ContactService
         return contactMapper.ContactEntityToDto(contactEntity);
     */
     public ContactDto modifyContact(ContactDto contactDto,Integer id){
-        contactDto.setId(id);
+        contactDto.setId(id); //suponemos siempre que ese id existe
         return Optional
                 .ofNullable(contactDto)
                 .map(dto -> contactMapper.contactDtoToEntity(dto))
