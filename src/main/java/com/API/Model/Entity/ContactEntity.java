@@ -17,6 +17,6 @@ public class ContactEntity
 
     @Column(name = "name", columnDefinition = "VARCHAR(50)")
     String name;
-    @Column(name = "number",columnDefinition = "VARCHAR(50)")
+    @Column(name = "number",columnDefinition = "INT(10)")
     int number;
 }

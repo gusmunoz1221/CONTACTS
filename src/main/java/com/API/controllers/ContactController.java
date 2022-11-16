@@ -1,6 +1,7 @@
 package com.API.controllers;
 
 import com.API.Model.dtos.ContactDto;
+import com.API.Model.dtos.ContactMessageDto;
 import com.API.services.ContactService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -17,9 +18,8 @@ public class ContactController
     }
 
     @PostMapping
-    public ResponseEntity<String> AddContact(@RequestBody @Validated ContactDto contactDto){
-        ContactDto contactDtoID = contactService.addContact(contactDto);
-        return ResponseEntity.ok().body("id:" + contactDtoID.getId() + " añadido correctamente.");
+    public ResponseEntity<ContactMessageDto> AddContact(@RequestBody @Validated ContactDto contactDto){
+        return ResponseEntity.ok(contactService.addContact(contactDto));
     }
 
     @GetMapping("/{id}")
