@@ -1,8 +1,8 @@
 package com.API.Model.mappers;
 
+import com.API.Model.Dtos.ContactDto;
+import com.API.Model.Dtos.ContactMessageDto;
 import com.API.Model.Entity.ContactEntity;
-import com.API.Model.dtos.ContactDto;
-import com.API.Model.dtos.ContactMessageDto;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 
@@ -17,7 +17,6 @@ public class ContactMapper
                                                 entity.getNumber()))
                 .orElse(new ContactDto());
     }
-
 
     public ContactEntity contactDtoToEntity(ContactDto contactDto){
         ContactEntity contactEntity =  new ContactEntity();
@@ -37,6 +36,4 @@ public class ContactMapper
         contactMessage.setId(contactEntity.getId());
         return contactMessage;
     }
-
-
 }

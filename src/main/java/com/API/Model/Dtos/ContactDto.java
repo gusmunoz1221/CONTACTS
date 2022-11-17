@@ -1,4 +1,4 @@
-package com.API.Model.dtos;
+package com.API.Model.Dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

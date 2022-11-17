@@ -1,7 +1,7 @@
 package com.API.controllers;
 
-import com.API.Model.dtos.ContactDto;
-import com.API.Model.dtos.ContactMessageDto;
+import com.API.Model.Dtos.ContactDto;
+import com.API.Model.Dtos.ContactMessageDto;
 import com.API.services.ContactService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

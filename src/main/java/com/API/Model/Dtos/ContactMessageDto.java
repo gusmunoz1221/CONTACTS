@@ -1,4 +1,4 @@
-package com.API.Model.dtos;
+package com.API.Model.Dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 /*
     agrega el massage por defecto y no en el mapping
 */
-
 public class ContactMessageDto
 {
     Integer id;
