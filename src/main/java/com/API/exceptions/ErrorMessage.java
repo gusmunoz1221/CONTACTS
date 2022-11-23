@@ -1,5 +1,7 @@
 package com.API.exceptions;
 
+import lombok.Data;
+@Data
 public class ErrorMessage
 {
     private String message;
@@ -8,12 +10,5 @@ public class ErrorMessage
     public ErrorMessage(String message, int code){
         this.message = message;
         this.code = code;
-    }
-
-    public int getCode() {
-        return code;
-    }
-    public String getMessage() {
-        return message;
     }
 }
