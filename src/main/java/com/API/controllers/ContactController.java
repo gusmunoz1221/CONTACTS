@@ -2,6 +2,8 @@ package com.API.controllers;
 
 import com.API.Model.Dtos.ContactDto;
 import com.API.Model.Dtos.ContactMessageDto;
+import com.API.Model.Entity.AddressEntity;
+import com.API.services.AddressService;
 import com.API.services.ContactService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -12,14 +14,17 @@ import org.springframework.web.bind.annotation.*;
 public class ContactController
 {
     private final ContactService contactService;
+    private final AddressService addressService;
 
-    public ContactController(ContactService contactService){
+    public ContactController(ContactService contactService, AddressService addressService){
         this.contactService = contactService;
+        this.addressService = addressService;
     }
 
     @PostMapping
     public ResponseEntity<ContactMessageDto> AddContact(@RequestBody @Validated ContactDto contactDto){
-        return ResponseEntity.ok(contactService.addContact(contactDto));
+        AddressEntity address = addressService.addAddress(contactDto.getAddress());
+        return ResponseEntity.ok(contactService.addContact(contactDto,address));
     }
 
     @GetMapping("/{id}")
@@ -29,7 +34,8 @@ public class ContactController
 
     @PutMapping("/{id}")
     public  ResponseEntity<ContactDto> deleteContact(@RequestBody ContactDto contactDto,@PathVariable(name = "id") Integer id){
-        return ResponseEntity.ok(contactService.modifyContact(contactDto,id));
+        AddressEntity address = addressService.addAddress(contactDto.getAddress());
+        return ResponseEntity.ok(contactService.modifyContact(contactDto,id,address));
     }
 
     @DeleteMapping("/{id}")

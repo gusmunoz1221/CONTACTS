@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class ContactMessageDto
+public class AddressDto
 {
     Integer id;
-    String message="agregado correctamente";
+    String street;
+    String number;
 }
