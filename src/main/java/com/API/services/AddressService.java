@@ -1,6 +1,7 @@
 package com.API.services;
 
 import com.API.Model.Dtos.AddressDto;
+import com.API.Model.Dtos.ContactDto;
 import com.API.Model.Entity.AddressEntity;
 import com.API.Model.mappers.AddressMapper;
 import com.API.Model.repositories.AddressRepository;
@@ -23,6 +24,16 @@ public class AddressService
       - mapea la direccion a entity y la guarda
       -la devuelve como entity y no como dto, porque nos hace falta para guardarla en contactEntity */
     public AddressEntity addAddress(AddressDto addressDto){
+        return Optional
+                .ofNullable(addressDto)
+                .map(dto -> addressMapper.addressDtoToEntity(dto))
+                .map(entity -> addressRepository.save(entity))
+                .orElse(new AddressEntity());
+    }
+
+    public  AddressEntity modifyAddress(AddressDto addressDto,Integer id)
+    {
+        addressDto.setId(id); //suponemos siempre que ese id existe
         return Optional
                 .ofNullable(addressDto)
                 .map(dto -> addressMapper.addressDtoToEntity(dto))

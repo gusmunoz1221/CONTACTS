@@ -33,8 +33,8 @@ public class ContactController
     }
 
     @PutMapping("/{id}")
-    public  ResponseEntity<ContactDto> deleteContact(@RequestBody ContactDto contactDto,@PathVariable(name = "id") Integer id){
-        AddressEntity address = addressService.addAddress(contactDto.getAddress());
+    public  ResponseEntity<ContactDto> modifyContact(@RequestBody ContactDto contactDto,@PathVariable(name = "id") Integer id){
+        AddressEntity address = addressService.modifyAddress(contactDto.getAddress(),id);
         return ResponseEntity.ok(contactService.modifyContact(contactDto,id,address));
     }
 
