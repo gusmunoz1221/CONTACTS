@@ -4,6 +4,7 @@ import com.API.Model.Dtos.ContactDto;
 import com.API.Model.Dtos.ContactMessageDto;
 import com.API.Model.Entity.AddressEntity;
 import com.API.Model.Entity.ContactEntity;
+import com.API.Model.repositories.AddressRepository;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 
@@ -11,9 +12,10 @@ import java.util.Optional;
 public class ContactMapper
 {
    private final AddressMapper addressMapper;
-
-    public ContactMapper(AddressMapper addressMapper) {
+   private final AddressRepository addressRepository;
+    public ContactMapper(AddressMapper addressMapper, AddressRepository addressRepository) {
         this.addressMapper = addressMapper;
+        this.addressRepository = addressRepository;
     }
 
     public ContactDto ContactEntityToDto(ContactEntity contactEntity){
@@ -22,7 +24,7 @@ public class ContactMapper
                                                 entity.getId(),
                                                 entity.getName(),
                                                 entity.getPhone(),
-                                                addressMapper.addressEntityToDto(entity.getAddress())
+                                                addressRepository.findById(entity.getId()).map(addressMapper::addressEntityToDto).orElse(null)
                                                 ))
                 .orElse(new ContactDto());
     }
