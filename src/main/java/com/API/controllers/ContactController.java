@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/contact")
 public class ContactController
@@ -23,13 +25,24 @@ public class ContactController
 
     @PostMapping
     public ResponseEntity<ContactMessageDto> AddContact(@RequestBody @Validated ContactDto contactDto){
-        AddressEntity address = addressService.addAddress(contactDto.getAddress());
-        return ResponseEntity.ok(contactService.addContact(contactDto,address));
+        return ResponseEntity.ok(contactService.addContact(contactDto));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ContactDto> getContact(@PathVariable(name = "id") int id){
         return ResponseEntity.ok(contactService.getContact(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ContactDto>> getContactsByPage(@RequestParam(name = "pageNumber",defaultValue = "0") Integer pageNumber,
+                                                                    @RequestParam(name = "pageSize",defaultValue = "1") Integer pageSize,
+                                                                    @RequestParam(required = false) String name,
+                                                                    @RequestParam(required = false)String phone){
+        if(name!=null && phone!=null)
+            return ResponseEntity.ok(contactService.getAllContacts(pageNumber,pageSize,name,phone));
+        if(name!=null)
+            return ResponseEntity.ok(contactService.getContactsByName(pageNumber,pageSize,name));
+        else return ResponseEntity.ok(contactService.getContactsByPhone(pageNumber,pageSize,phone));
     }
 
     @PutMapping("/{id}")

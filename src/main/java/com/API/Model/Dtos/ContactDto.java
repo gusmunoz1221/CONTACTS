@@ -11,6 +11,6 @@ public class ContactDto
 {
      Integer id;
      String name;
-     int phone;
+     String phone;
      AddressDto address;
 }

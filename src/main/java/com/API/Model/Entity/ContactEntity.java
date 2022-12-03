@@ -20,11 +20,11 @@ public class ContactEntity
 
     @Column(name = "name", columnDefinition = "VARCHAR(50)")
     String name;
-    @Column(name = "phone",columnDefinition = "INT(10)")
-    int phone;
+    @Column(name = "phone",columnDefinition = "VARCHAR(50)")
+    String phone;
 
-    @OneToOne
     @NotFound(action = NotFoundAction.IGNORE)
-    @JoinColumn(name = "address",referencedColumnName = "idaddress", insertable = false, updatable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_address")
     AddressEntity address;
 }

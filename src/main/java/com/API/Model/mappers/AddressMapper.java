@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class AddressMapper{
-
+public class AddressMapper
+{
     public AddressDto addressEntityToDto(AddressEntity addressEntity){
         return Optional.ofNullable(addressEntity)
                 .map(entity ->  new AddressDto(
