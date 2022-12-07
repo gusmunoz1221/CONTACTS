@@ -12,19 +12,19 @@ public class AddressMapper
     public AddressDto addressEntityToDto(AddressEntity addressEntity){
         return Optional.ofNullable(addressEntity)
                 .map(entity ->  new AddressDto(
-                        entity.getStreet(),
-                        entity.getNumber()
-                ))
+                                                entity.getStreet(),
+                                                entity.getNumber()
+                                                ))
                 .orElse(new AddressDto());
     }
 
     public AddressResponseDto addressEntityToDtoResponse(AddressEntity addressEntity){
         return Optional.ofNullable(addressEntity)
                 .map(entity ->  new AddressResponseDto(
-                        entity.getIdaddress(),
-                        entity.getStreet(),
-                        entity.getNumber()
-                ))
+                                                        entity.getIdaddress(),
+                                                        entity.getStreet(),
+                                                        entity.getNumber()
+                                                        ))
                 .orElse(new AddressResponseDto());
     }
 

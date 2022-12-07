@@ -1,6 +1,5 @@
 package com.API.Model.Entity;
 
-
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import javax.persistence.*;
