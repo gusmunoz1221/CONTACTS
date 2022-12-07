@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ContactRepository extends PagingAndSortingRepository<ContactEntity,Integer>
 {
@@ -18,6 +20,9 @@ public interface ContactRepository extends PagingAndSortingRepository<ContactEnt
     Page<ContactEntity> findAllByPhoneContains(String phone,Pageable pageable);
     /*INTERSECCION*/
     Page<ContactEntity> findAllByNameContainsAndPhoneContains(String name,String phone,Pageable pageable);
+
+    List<ContactEntity> findByAddress(AddressEntity address);
+
 }
 /*
                   ------PRUEBAS------

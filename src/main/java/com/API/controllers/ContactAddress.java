@@ -1,7 +1,9 @@
 package com.API.controllers;
 
 import com.API.Model.Dtos.AddressDto;
+import com.API.Model.Dtos.AddressResponseDto;
 import com.API.Model.Dtos.ContactDto;
+import com.API.Model.Dtos.ContactResponseDto;
 import com.API.Model.Entity.AddressEntity;
 import com.API.services.AddressService;
 import com.API.services.ContactService;
@@ -24,22 +26,23 @@ public class ContactAddress
     }
 
     @GetMapping
-    public ResponseEntity<List<AddressDto>> getAddressByPage(@RequestParam(name = "pageNumber",defaultValue = "0") Integer pageNumber,
-                                                             @RequestParam(name = "pageSize",defaultValue = "2") Integer pageSize,
-                                                             @RequestParam(required = false) String street,
-                                                             @RequestParam(required = false)String number){
+    public ResponseEntity<List<AddressResponseDto>> getAddressByPage(@RequestParam(name = "pageNumber",defaultValue = "0") Integer pageNumber,
+                                                                     @RequestParam(name = "pageSize",defaultValue = "2") Integer pageSize,
+                                                                     @RequestParam(required = false) String street,
+                                                                     @RequestParam(required = false)String number){
         if(street!=null && number!=null)
             return ResponseEntity.ok(addressService.getAllAddresses(pageNumber,pageSize,street,number));
           if(street!=null)
             return ResponseEntity.ok(addressService.getAddressByFilterFileStreet(pageNumber,pageSize,street));
-          else return ResponseEntity.ok(addressService.getAddressByFilterFileNumber(pageNumber,pageSize,number));
+
+            return ResponseEntity.ok(addressService.getAddressByFilterFileNumber(pageNumber,pageSize,number));
     }
 
     @GetMapping("/{id}/contact")
-    public ResponseEntity<List<ContactDto>> getContactsByIdAddress(@RequestParam(name = "pageNumber",defaultValue = "0") Integer pageNumber,
-                                                                   @RequestParam(name = "pageSize",defaultValue = "2") Integer pageSize,
-                                                                   @PathVariable Integer id){
-        List<AddressEntity> addressEntity = addressService.findAddressById(id);
+    public ResponseEntity<List<ContactResponseDto>> getContactsByIdAddress(@RequestParam(name = "pageNumber",defaultValue = "0") Integer pageNumber,
+                                                                           @RequestParam(name = "pageSize",defaultValue = "2") Integer pageSize,
+                                                                           @PathVariable Integer id){
+        AddressEntity addressEntity = addressService.findAddressById(id);
         return ResponseEntity.ok(contactService.getContactByAddress(addressEntity));
     }
 }

@@ -24,7 +24,7 @@ public class ContactEntity
     String phone;
 
     @NotFound(action = NotFoundAction.IGNORE)
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_address")
     AddressEntity address;
 }

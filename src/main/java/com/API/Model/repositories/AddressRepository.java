@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
-import java.util.List;
 
 @Repository
 public interface AddressRepository extends PagingAndSortingRepository<AddressEntity,Integer>
@@ -16,8 +15,10 @@ public interface AddressRepository extends PagingAndSortingRepository<AddressEnt
     Page<AddressEntity> findAllByNumberContains(String number,Pageable pageable);
     /*INTERSECCION*/
     Page<AddressEntity> findAllByStreetContainsAndNumberContains(String street,String number,Pageable pageable);
+    /*INTERSECCION*/
+    boolean existsByStreetAndNumber(String street,String number);
 
-    List<AddressEntity> findAllByStreetAndNumber(String street,String number);
+    AddressEntity findByStreetAndNumber(String street,String number);
 }
 
 /*                  ------PRUEBAS------

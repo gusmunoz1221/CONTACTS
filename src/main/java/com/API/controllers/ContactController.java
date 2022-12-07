@@ -2,6 +2,7 @@ package com.API.controllers;
 
 import com.API.Model.Dtos.ContactDto;
 import com.API.Model.Dtos.ContactMessageDto;
+import com.API.Model.Dtos.ContactResponseDto;
 import com.API.Model.Entity.AddressEntity;
 import com.API.services.AddressService;
 import com.API.services.ContactService;
@@ -34,21 +35,21 @@ public class ContactController
     }
 
     @GetMapping
-    public ResponseEntity<List<ContactDto>> getContactsByPage(@RequestParam(name = "pageNumber",defaultValue = "0") Integer pageNumber,
-                                                                    @RequestParam(name = "pageSize",defaultValue = "1") Integer pageSize,
-                                                                    @RequestParam(required = false) String name,
-                                                                    @RequestParam(required = false)String phone){
+    public ResponseEntity<List<ContactResponseDto>> getContactsByPage(@RequestParam(name = "pageNumber",defaultValue = "0") Integer pageNumber,
+                                                                      @RequestParam(name = "pageSize",defaultValue = "1") Integer pageSize,
+                                                                      @RequestParam(required = false) String name,
+                                                                      @RequestParam(required = false)String phone){
         if(name!=null && phone!=null)
             return ResponseEntity.ok(contactService.getAllContacts(pageNumber,pageSize,name,phone));
         if(name!=null)
             return ResponseEntity.ok(contactService.getContactsByName(pageNumber,pageSize,name));
-        else return ResponseEntity.ok(contactService.getContactsByPhone(pageNumber,pageSize,phone));
+
+        return ResponseEntity.ok(contactService.getContactsByPhone(pageNumber,pageSize,phone));
     }
 
     @PutMapping("/{id}")
-    public  ResponseEntity<ContactDto> modifyContact(@RequestBody ContactDto contactDto,@PathVariable(name = "id") Integer id){
-        AddressEntity address = addressService.modifyAddress(contactDto.getAddress(),id);
-        return ResponseEntity.ok(contactService.modifyContact(contactDto,id,address));
+    public  ResponseEntity<ContactResponseDto> modifyContact(@RequestBody ContactDto contactDto,@PathVariable(name = "id") Integer id){
+        return ResponseEntity.ok(contactService.modifyContact(contactDto,id));
     }
 
     @DeleteMapping("/{id}")

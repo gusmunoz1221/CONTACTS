@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ContactDto
 {
-     Integer id;
      String name;
      String phone;
      AddressDto address;

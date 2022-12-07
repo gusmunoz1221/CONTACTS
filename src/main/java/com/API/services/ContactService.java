@@ -2,6 +2,7 @@ package com.API.services;
 
 import com.API.Model.Dtos.ContactDto;
 import com.API.Model.Dtos.ContactMessageDto;
+import com.API.Model.Dtos.ContactResponseDto;
 import com.API.Model.Entity.AddressEntity;
 import com.API.Model.mappers.AddressMapper;
 import com.API.Model.mappers.ContactMapper;
@@ -13,7 +14,6 @@ import com.API.exceptions.ContactUnexistingException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +35,10 @@ public class ContactService {
 
     /*-Agregamos un contacto nuevo a la base de datos
       -consulta en el metodo creado en repository si el nombre ingresado existe-devolviendo un boolean
-      -consulta en el metodo creado en repository si el numero ingresado existe-devolviendo un boolean
       -si existen, en cualquier if arroja una exception
-      - si no existe, mapeamos el dto a entity lo guardamos en el repositorio
+      - - si no existe los contactos, preguntamos si existe la direccion en el repository
+      - si existe, buscamos la direccion guardada y creamos un contacto con dicha direccion
+      - si no existe,creaos una nueva direccion y creamos un contacto con dicha direccion creada.
       -cuando ya lo guardamos, mapeamos el entity a dtoMessage y retorna contactMessageDto */
     public ContactMessageDto addContact(ContactDto contactDto){
         if(contactRepository.existsByName(contactDto.getName()))
@@ -47,40 +48,68 @@ public class ContactService {
         if (contactDto.getName().equals(null) || contactDto.getPhone()==null)
             throw new BadRequestException("datos incorrectos");
 
-        AddressEntity addressEntity = addressService.addAddress(contactDto.getAddress());
-        return Optional
-                .ofNullable(contactDto)
-                .map(dto -> contactMapper.contactDtoToEntity(dto,addressEntity))
-                .map(entity -> contactRepository.save(entity))
-                .map(entity -> contactMapper.ContactEntityToMessage(entity))
-                .orElse(new ContactMessageDto());
+
+        if (addressRepository.existsByStreetAndNumber(contactDto.getAddress().getStreet(),contactDto.getAddress().getNumber()))
+        {
+            AddressEntity addressEntity  =  addressRepository.findByStreetAndNumber(contactDto.getAddress().getStreet(),contactDto.getAddress().getNumber());
+
+            return Optional
+                    .ofNullable(contactDto)
+                    .map(dto -> contactMapper.contactDtoToEntity(dto,addressEntity))
+                    .map(entity -> contactRepository.save(entity))
+                    .map(entity -> contactMapper.ContactEntityToMessage(entity))
+                    .orElse(new ContactMessageDto());
+        }
+        else
+        {
+            AddressEntity addressEntity  =  addressMapper.addressDtoToEntity(contactDto.getAddress());
+
+            return Optional
+                    .ofNullable(contactDto)
+                    .map(dto -> contactMapper.contactDtoToEntity(dto,addressEntity))
+                    .map(entity -> contactRepository.save(entity))
+                    .map(entity -> contactMapper.ContactEntityToMessage(entity))
+                    .orElse(new ContactMessageDto());
+        }
     }
 
     /*  -obtemos un contacto por su ID
         -lo buscamos por la funcion  existByID.
-        -cuando lo encontramos lo mapiamos convirtiendolo a a dto*/
+        -cuando lo encontramos lo mapiamos convirtiendolo a a dto */
     public ContactDto getContact(Integer id) {
         if (!contactRepository.existsById(id))
             throw new ContactUnexistingException("el contacto con codigo:" + id + " no existe en la base de datos..");
+
         return contactRepository.findById(id).map(contactMapper::ContactEntityToDto).orElse(null);
     }
 
-    /*- moficamos un contacto ya guardado (cumple con el update(modifica el contacto ya creado))
-      - seteamos el ID por el id mandado en la url
-      -ralizamos el mismo proceso de agreagado*/
-    public ContactDto modifyContact(ContactDto contactDto, Integer id, AddressEntity addressEntity) {
+    public ContactResponseDto modifyContact(ContactDto contactDto, Integer id){
         if (!contactRepository.existsById(id))
             throw new ContactUnexistingException("el contacto con codigo:" + id + " no existe en la base de datos..");
         if (contactDto.getName().equals(null) || contactDto.getPhone().equals(null))
             throw new BadRequestException("datos incorrectos");
 
-        contactDto.setId(id); //suponemos siempre que ese id existe
-        return Optional
-                .ofNullable(contactDto)
-                .map(dto -> contactMapper.contactDtoToEntity(dto, addressEntity))
-                .map(entity -> contactRepository.save(entity))
-                .map(entity -> contactMapper.ContactEntityToDto(entity))
-                .orElse(new ContactDto());
+        if (addressRepository.existsByStreetAndNumber(contactDto.getAddress().getStreet(),contactDto.getAddress().getNumber()))
+        {
+            AddressEntity addressEntity  =  addressRepository.findByStreetAndNumber(contactDto.getAddress().getStreet(),contactDto.getAddress().getNumber());
+
+            return Optional
+                    .ofNullable(contactDto)
+                    .map(dto -> contactMapper.contactDtoToEntityModify(dto,addressEntity,id))
+                    .map(entity -> contactRepository.save(entity))
+                    .map(entity -> contactMapper.ContactEntityToDtoResponse(entity))
+                    .orElse(new ContactResponseDto());
+        }
+        else
+        {
+            AddressEntity addressEntity  =  addressMapper.addressDtoToEntity(contactDto.getAddress());
+            return Optional
+                    .ofNullable(contactDto)
+                    .map(dto -> contactMapper.contactDtoToEntityModify(dto,addressEntity,id))
+                    .map(entity -> contactRepository.save(entity))
+                    .map(entity -> contactMapper.ContactEntityToDtoResponse(entity))
+                    .orElse(new ContactResponseDto());
+        }
     }
 
     /* -eliminamos un contacto retornando true or false
@@ -89,49 +118,42 @@ public class ContactService {
     public boolean deleteContact(Integer id) {
         if (!contactRepository.existsById(id))
             throw new ContactUnexistingException("el contacto con codigo:" + id + " no existe en la base de datos..");
+
         contactRepository.deleteById(id);
         return true;
     }
 
     /*  LISTADOS POR PAGINACION */
-    public List<ContactDto> getAllContacts(Integer pageNumber, Integer pageSize, String name, String phone){
+    public List<ContactResponseDto> getAllContacts(Integer pageNumber, Integer pageSize, String name, String phone){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        List<ContactDto> listContacts = contactRepository.findAllByNameContainsAndPhoneContains(name,phone,pageable)
-                                                         .map(contactMapper::ContactEntityToDto)
-                                                         .stream()
-                                                         .toList();
+        List<ContactResponseDto> listContacts = contactRepository.findAllByNameContainsAndPhoneContains(name,phone,pageable)
+                                                                 .map(contactMapper::ContactEntityToDtoResponse)
+                                                                 .stream()
+                                                                 .toList();
         return listContacts;
     }
 
-    public List<ContactDto> getContactsByName(Integer pageNumber, Integer pageSize,String name){
+    public List<ContactResponseDto> getContactsByName(Integer pageNumber, Integer pageSize,String name){
         Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        List<ContactDto> listContacts = contactRepository.findAllByNameContains(name,pageable)
-                                                         .map(contactMapper::ContactEntityToDto)
-                                                         .stream()
-                                                         .toList();
+        List<ContactResponseDto> listContacts = contactRepository.findAllByNameContains(name,pageable)
+                                                                 .map(contactMapper::ContactEntityToDtoResponse)
+                                                                 .stream()
+                                                                 .toList();
        return listContacts;
-
     }
 
-        public List<ContactDto> getContactsByPhone(Integer pageNumber, Integer pageSize,String phone){
+    public List<ContactResponseDto> getContactsByPhone(Integer pageNumber, Integer pageSize,String phone){
         Pageable pageable = PageRequest.of(pageNumber,pageSize);
-            List<ContactDto> listContacts = contactRepository.findAllByPhoneContains(phone,pageable)
-                                                             .map(contactMapper::ContactEntityToDto)
-                                                             .stream().toList();
+        List<ContactResponseDto> listContacts = contactRepository.findAllByPhoneContains(phone,pageable)
+                                                                 .map(contactMapper::ContactEntityToDtoResponse)
+                                                                 .stream().toList();
         return listContacts;
     }
 
-    /*recibo por parametro una lista de direcciones
-    *creo una nueva lista donde se van a guardar todos los contactos
-    * dentro del bucle,añado a la lista los contactos cuyo ids son los que tienen la misma calle y numero*/
-    public List<ContactDto> getContactByAddress(List<AddressEntity> addressEntityList){
-        List<ContactDto> listContacts = new ArrayList<>();
-
-        for(AddressEntity address :  addressEntityList)
-            listContacts.add(contactRepository.findById(address.getIdaddress())
-                        .map(contactMapper::ContactEntityToDto)
-                        .orElse(null));
+    public List<ContactResponseDto> getContactByAddress(AddressEntity addressEntity){
+        List<ContactResponseDto> listContacts = contactRepository.findByAddress(addressEntity)
+                                                                 .stream().map(contactMapper::ContactEntityToDtoResponse)
+                                                                 .toList();
         return listContacts;
     }
 }
-
