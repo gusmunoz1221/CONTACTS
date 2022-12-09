@@ -27,7 +27,8 @@ public class ContactMapper
                                                 addressRepository.findById(entity.getId())
                                                                  .map(addressMapper::addressEntityToDto)
                                                                  .orElse(null)
-                                                ))
+                                                )
+                    )
                 .orElse(new ContactDto());
     }
     public ContactResponseDto ContactEntityToDtoResponse(ContactEntity contactEntity){
@@ -40,7 +41,8 @@ public class ContactMapper
                                                                          .getId())
                                                                          .map(addressMapper::addressEntityToDtoResponse)
                                                                          .orElse(null)
-                ))
+                                                        )
+                    )
                 .orElse(new ContactResponseDto());
     }
 

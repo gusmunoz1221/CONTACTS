@@ -14,7 +14,8 @@ public class AddressMapper
                 .map(entity ->  new AddressDto(
                                                 entity.getStreet(),
                                                 entity.getNumber()
-                                                ))
+                                                )
+                    )
                 .orElse(new AddressDto());
     }
 
@@ -24,7 +25,8 @@ public class AddressMapper
                                                         entity.getIdaddress(),
                                                         entity.getStreet(),
                                                         entity.getNumber()
-                                                        ))
+                                                        )
+                    )
                 .orElse(new AddressResponseDto());
     }
 

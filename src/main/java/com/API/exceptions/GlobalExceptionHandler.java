@@ -27,7 +27,11 @@ public class GlobalExceptionHandler
     public ResponseEntity<ErrorMessage> ValidationHandler(HttpServletRequest req,Exception e){
         return new ResponseEntity<ErrorMessage>(new ErrorMessage(e.getMessage(),3), HttpStatus.NOT_ACCEPTABLE);
     }
-
+    @ExceptionHandler(UserUnexistingException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorMessage> notFoundUser(HttpServletRequest req, Exception e ){
+        return new ResponseEntity<ErrorMessage>(new ErrorMessage(e.getMessage(),4), HttpStatus.NOT_FOUND);
+    }
    /*
       SOLO PIDE AGREGAR MESSAGE Y COD
      @ExceptionHandler(BadRequestException.class)
