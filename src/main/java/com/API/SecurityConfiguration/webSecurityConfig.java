@@ -30,10 +30,9 @@ public class webSecurityConfig{
         return http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.DELETE).denyAll()
-                .and()
-                .authorizeHttpRequests()
                 .antMatchers(HttpMethod.PUT).denyAll()
+                .and().authorizeRequests()
+                .antMatchers(HttpMethod.DELETE).denyAll()
                 .and()
                 .httpBasic()
                 .and()
