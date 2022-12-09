@@ -3,6 +3,7 @@ package com.API.SecurityConfiguration;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,8 +30,10 @@ public class webSecurityConfig{
         return http
                 .csrf().disable()
                 .authorizeRequests()
-                .anyRequest()
-                .authenticated()
+                .antMatchers(HttpMethod.DELETE).denyAll()
+                .and()
+                .authorizeHttpRequests()
+                .antMatchers(HttpMethod.PUT).denyAll()
                 .and()
                 .httpBasic()
                 .and()
@@ -55,5 +58,4 @@ public class webSecurityConfig{
         PasswordEncoder passwordEncoder(){
             return new BCryptPasswordEncoder();
         }
-
 }

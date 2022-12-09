@@ -15,12 +15,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/address")
-public class ContactAddress
+public class AddressController
 {
     private final AddressService addressService;
     private final ContactService contactService;
 
-    public ContactAddress(AddressService addressService, ContactService contactService) {
+    public AddressController(AddressService addressService, ContactService contactService) {
         this.addressService = addressService;
         this.contactService = contactService;
     }

@@ -34,27 +34,27 @@ public class AddressService
     public List<AddressResponseDto> getAllAddresses(Integer pageNumber, Integer pageSize, String filterFileStreet, String filterFileNumber){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         List<AddressResponseDto> listAddresses = addressRepository.findAllByStreetContainsAndNumberContains(filterFileStreet,filterFileNumber,pageable)
-                                                          .map(addressMapper::addressEntityToDtoResponse)
-                                                          .stream()
-                                                          .toList();
+                                                                  .map(addressMapper::addressEntityToDtoResponse)
+                                                                  .stream()
+                                                                  .toList();
         return listAddresses;
     }
 
     public List<AddressResponseDto> getAddressByFilterFileStreet(Integer pageNumber,Integer pageSize,String filterFileStreet) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         List<AddressResponseDto> listAddresses = addressRepository.findAllByStreetContains(filterFileStreet, pageable)
-                                                          .map(addressMapper::addressEntityToDtoResponse)
-                                                          .stream()
-                                                          .toList();
+                                                                  .map(addressMapper::addressEntityToDtoResponse)
+                                                                  .stream()
+                                                                  .toList();
         return listAddresses;
     }
 
     public List<AddressResponseDto> getAddressByFilterFileNumber(Integer pageNumber,Integer pageSize,String filterFileNumber) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         List<AddressResponseDto> listAddresses = addressRepository.findAllByNumberContains(filterFileNumber,pageable)
-                                                          .map(addressMapper::addressEntityToDtoResponse)
-                                                          .stream()
-                                                          .toList();
+                                                                  .map(addressMapper::addressEntityToDtoResponse)
+                                                                  .stream()
+                                                                  .toList();
         return listAddresses;
     }
 }

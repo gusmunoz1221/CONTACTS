@@ -51,7 +51,10 @@ public class ContactService {
 
         if (addressRepository.existsByStreetAndNumber(contactDto.getAddress().getStreet(),contactDto.getAddress().getNumber()))
         {
-            AddressEntity addressEntity  =  addressRepository.findByStreetAndNumber(contactDto.getAddress().getStreet(),contactDto.getAddress().getNumber());
+            AddressEntity addressEntity  =  addressRepository.findByStreetAndNumber(contactDto.getAddress()
+                                                             .getStreet(),contactDto
+                                                             .getAddress()
+                                                             .getNumber());
 
             return Optional
                     .ofNullable(contactDto)
